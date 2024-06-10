@@ -35,6 +35,9 @@ const AcReportSchema = new Schema(
     duration: {
       type: String,
     },
+    sentiment:{
+      type: String,
+    },
   },
   { timestamps: true }
 );
