@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const { Schema } = mongoose;
 
-const DailyReportSchema = new Schema(
+const DailyChannelReportSchema = new Schema(
   {
     userId: {
       type: Schema.Types.ObjectId,
@@ -42,7 +42,7 @@ const DailyReportSchema = new Schema(
   { timestamps: true }
 );
 
-DailyReportSchema.pre("save", async function () {
+DailyChannelReportSchema.pre("save", async function () {
   try {
     await this.populate("userId", "email").execPopulate();
     console.log("User Email:", this.userId.email);
@@ -51,6 +51,6 @@ DailyReportSchema.pre("save", async function () {
   }
 });
 
-const DailyReport = mongoose.model("DailyReport", DailyReportSchema);
+const DailyChannelReport = mongoose.model("DailyChannelReport", DailyChannelReportSchema);
 
-module.exports = DailyReport;
+module.exports = DailyChannelReport;
