@@ -22,19 +22,24 @@ router.post("/report", async (req, res) => {
 router.get("/get-report", async (req, res) => {
   try {
     let moms;
+    const sortOrder = { views: -1 }; // Sort by views in descending order
+
     if (req.query.perPage === "all") {
-      moms = await Report.find().populate("userId");
+      moms = await Report.find().populate("userId").sort(sortOrder);
     } else {
       const perPage = parseInt(req.query.perPage);
       moms = await Report.find()
         .populate("userId")
+        .sort(sortOrder)
         .limit(perPage);
     }
+
     res.status(200).json(moms);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 });
+
 
 
 router.get("/get-top-10-reports", async (req, res) => {
@@ -63,6 +68,32 @@ router.get("/get-report-by-id/:momId", async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 });
+
+router.get("/get-report-by-source/:sourceId", async (req, res) => {
+  try {
+    const { sourceId } = req.params;
+    console.log("sourceId::: ", sourceId);
+
+    let reports;
+    if (req.query.perPage === "all") {
+      reports = await Report.find({ source: sourceId }).populate("userId");
+    } else {
+      const perPage = parseInt(req.query.perPage);
+      reports = await Report.find({ source: sourceId })
+        .populate("userId")
+        .limit(perPage);
+    }
+
+    if (reports.length === 0) {
+      return res.status(404).json({ error: "No reports found for the specified source" });
+    }
+
+    res.status(200).json(reports);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
 
 // router.get("/get-report/:userId", async (req, res) => {
 //   try {

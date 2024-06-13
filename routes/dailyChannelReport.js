@@ -22,19 +22,24 @@ router.post("/report", async (req, res) => {
 router.get("/get-report", async (req, res) => {
   try {
     let moms;
+    const sortOrder = { views: -1 }; // Sort by views in descending order
+
     if (req.query.perPage === "all") {
-      moms = await Report.find().populate("userId");
+      moms = await Report.find().populate("userId").sort(sortOrder);
     } else {
       const perPage = parseInt(req.query.perPage);
       moms = await Report.find()
         .populate("userId")
+        .sort(sortOrder)
         .limit(perPage);
     }
+
     res.status(200).json(moms);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 });
+
 
 
 router.get("/get-top-10-reports", async (req, res) => {
